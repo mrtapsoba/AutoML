@@ -10,7 +10,8 @@ import geopandas as gpd
 st.set_page_config(
     page_title = "Auto ML by HAI",
     layout = "wide",
-    initial_sidebar_state = "expanded"
+    initial_sidebar_state = "expanded",
+    page_icon="🧊"
 )
 
 
@@ -101,6 +102,9 @@ def pre_processing():
     col = st.columns((3,1))
     with col[0]:
         st.subheader("PreProcessing Tasks")
+        task = st.selectbox("Choose a preprocessing task", ('Delete Missing data', 'Replace Missing data'),index=None)
+        st.write("Small message which explain the task")
+        st.divider()
 
     with col[1]:
         st.subheader("History")
