@@ -69,6 +69,7 @@ def data_for_study() :
             st.write(f"Your Dataset has")
             st.markdown(f"### Rows: {len(dataset)} and Columns: {len(dataset.columns)}")
             selected_columns = st.multiselect("Choose the columns for study", dataset.columns)
+        
         st.markdown("#### Preview of imported data")
         st.write("You can modify / update data directly here ")
             
@@ -94,6 +95,18 @@ def data_for_study() :
         else:
             st.markdown("## Please import your data")
         return
+
+def pre_processing():
+    st.title("PreProcessing")
+    col = st.columns((3,1))
+    with col[0]:
+        st.subheader("PreProcessing Tasks")
+
+    with col[1]:
+        st.subheader("History")
+        liste_taches = ["Supprimer les valeurs manquantes", "Normaliser les données", "Supprimer les valeurs manquantes", "Encoder les variables catégorielles", "Normaliser les données", "Supprimer les valeurs manquantes", "Supprimer les valeurs manquantes", "Normaliser les données", "Supprimer les valeurs manquantes", "Encoder les variables catégorielles", "Normaliser les données", "Supprimer les valeurs manquantes"]
+        df_taches = pd.DataFrame({"Tasks": liste_taches})
+        st.write(df_taches)
     
 
 if(selected_page == "About Project"):
@@ -103,11 +116,19 @@ else:
         data = data_for_study()
     else:
         if('dataset_edited' not in st.session_state):
-            st.write("No Data")
+            col = st.columns((2,1))
+            with col[0]:
+                st.image("https://i.pinimg.com/564x/c9/22/68/c92268d92cf2dbf96e3195683d9e14fb.jpg", caption="No data found for preprocessing")
+            with col[1]:
+                st.title("No Data Found")
+                st.write("Hello")
+                st.write("We noticed that no data has been found to perform the preparation. We encourage you to go to the \"Data for study\" tab to add the necessary data.")
+                st.write("Thank you very much!")
+
         else:
             if(selected_page == "PreProcessing"):
                 #
-                st.markdown("# PreProcessing")
+                pre_processing()
             elif(selected_page == 'Analisis'):
                 #
                 st.markdown("# Analisis")
