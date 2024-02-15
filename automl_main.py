@@ -99,16 +99,20 @@ def data_for_study() :
 
 def pre_processing():
     st.title("PreProcessing")
+    tasks_list = {
+        "categorie" : ['Data cleaning', 'Data Transformation', 'Data Reduction'],
+        "task": ['Fill the Missing values', 'Normalization', '']
+    }
     col = st.columns((3,1))
     with col[0]:
         st.subheader("PreProcessing Tasks")
-        task = st.selectbox("Choose a preprocessing task", ('Delete Missing data', 'Replace Missing data'),index=None)
+        task = st.selectbox("Choose a preprocessing task", pd.DataFrame(tasks_list)['categorie'].unique())
         st.write("Small message which explain the task")
         st.divider()
 
     with col[1]:
         st.subheader("History")
-        liste_taches = ["Supprimer les valeurs manquantes", "Normaliser les données", "Supprimer les valeurs manquantes", "Encoder les variables catégorielles", "Normaliser les données", "Supprimer les valeurs manquantes", "Supprimer les valeurs manquantes", "Normaliser les données", "Supprimer les valeurs manquantes", "Encoder les variables catégorielles", "Normaliser les données", "Supprimer les valeurs manquantes"]
+        liste_taches = ["Supprimer les valeurs manquantes", "Normaliser les données", "Supprimer les valeurs manquantes", "Encoder les variables catégorielles"]
         df_taches = pd.DataFrame({"Tasks": liste_taches})
         st.write(df_taches)
     
