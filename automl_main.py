@@ -101,18 +101,31 @@ def data_for_study() :
             st.markdown("## Please import your data")
         return
 
-def pre_processing():
+def pre_processing(data):
     st.title("PreProcessing")
-    tasks_list = {
-        "categorie" : ['Data cleaning', 'Data Transformation', 'Data Reduction'],
-        "task": ['Fill the Missing values', 'Normalization', '']
-    }
+    tasks_list = ['Data cleaning', 'Data Transformation', 'Data Reduction', 'Code Myself']
     col = st.columns((3,1))
     with col[0]:
         st.subheader("PreProcessing Tasks")
-        task = st.selectbox("Choose a preprocessing task", pd.DataFrame(tasks_list)['categorie'].unique())
+        task = st.selectbox("Choose a preprocessing task", tasks_list)
         st.write("Small message which explain the task")
         st.divider()
+        if task == "Data cleaning":
+            col2 = st.columns(2)
+            with col2[0]:
+                clean_data = st.selectbox("Choose type data", ["Missing data", "Aberrante"])
+            with col2[1]:
+                clean_type = st.selectbox("Choose clean data", ["Delete it", "Replace by mean", "Replace by Quartile"])
+            if(st.button("Apply")):
+                st.write("Save data")
+        elif task == "Code Myself":
+            mycode = st.text_area("Write your code in Python")
+            if(mycode != None):
+                st.write("See your code")
+                st.code(mycode)
+                if(st.button("Apply")):
+                    exec(mycode)
+                    st.write("Your code is apply with succes")
 
     with col[1]:
         st.subheader("History")
@@ -143,12 +156,10 @@ else:
                 st.markdown("# Data Exploring")
             elif(selected_page == "PreProcessing"):
                 #
-                pre_processing()
+                pre_processing(st.session_state['dataset_edited'])
             elif(selected_page == 'Machine Learning'):
                 #
                 st.markdown("# Machine Learning")
-        
-
 
 
 
