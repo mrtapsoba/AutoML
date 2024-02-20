@@ -1,13 +1,13 @@
 import streamlit as st
-import pandas as pd
 import altair as alt
 import plotly.express as px
 from streamlit_option_menu import option_menu
 import geopandas as gpd
-import ml_function as ftn
+import home_page as hmpg
+import data_page as dtpg
+import pre_page as prpg
 
 #######################
-
 st.set_page_config(
     page_title = "Free ML by HAI",
     layout = "wide",
@@ -15,151 +15,32 @@ st.set_page_config(
     page_icon="🧊"
 )
 
-
 with st.sidebar:
     st.title("Free Machine Learning")
     selected_page = option_menu("Main menu", ["About Project", "Data for study", "Data Exploring", "PreProcessing", 'Machine Learning'], icons=['house', 'cloud'], menu_icon="", default_index=0)
     st.title("Halal Artificial Intelligence")
-
-def home_page():
-    st.title("Artificial Intelligence for All")
-    st.divider()
-    col = st.columns(2)
-    with col[0]:
-        st.image('https://i.pinimg.com/564x/73/3a/ab/733aabf56ce0435dd693e4e821996e24.jpg', caption='Image for illustration')
-    with col[1]:
-        st.subheader("What is AI and ML ?")
-        st.markdown("**AI (Artificial Intelligence)**: AI refers to the simulation of human intelligence processes by computer systems. These processes include learning (the acquisition of information and rules for using the information), reasoning (using rules to reach approximate or definite conclusions), and self-correction.")
-        st.markdown("**ML (Machine Learning)**: ML is a subset of AI that focuses on the development of algorithms that enable computers to learn from and make predictions or decisions based on data. It involves creating and training models that can recognize patterns in data and make intelligent decisions without being explicitly programmed to do so.")
-    st.divider()
-    col2 = st.columns((2,1))
-    with col2[0]:
-        st.subheader("What is AutoML ?")
-        st.write("AutoML, or Automated Machine Learning, is an approach aimed at simplifying and automating the process of building machine learning models. By using AutoML, developers and data science practitioners can create models efficiently, without having to manually perform every step of the process.")
-        st.write("With an AutoML interface, instead of writing code, users interact with a user-friendly platform that allows them to specify input data, select the types of models to explore, and define performance metrics to optimize. The interface then automatically handles all steps of the process, including data preprocessing, selecting the best algorithm, optimizing hyperparameters, and evaluating the generated models.")
-    with col2[1]:
-        st.image("https://i.pinimg.com/564x/62/65/6a/62656abd85e08ca48c55cc43e9959354.jpg", caption="Auto Ml")
-    st.divider()
-    col4 = st.columns((1,2))
-    with col4[0]:
-        st.image("https://i.pinimg.com/564x/42/73/28/427328eb1a8e264cc8243307bae64974.jpg", caption="AI for All")
-    with col4[1]:
-        st.subheader("Why AutoML ?")
-        st.write("The importance of AutoML lies in its ability to democratize access to machine learning. By simplifying the model creation process, AutoML enables a wider range of people, even those without deep expertise in data science, to benefit from the advantages of artificial intelligence. This accelerates the development of AI-based solutions in various domains such as healthcare, finance, e-commerce, and more. Additionally, by automating repetitive and tedious tasks, AutoML frees up time for data science practitioners, allowing them to focus on more complex and strategic tasks.")
-    st.divider()
-    col3 = st.columns(2)
-    with col3[0]:
-        st.image("https://i.pinimg.com/564x/e4/73/86/e4738693fbcb586ab4286a4458ed9acb.jpg", caption="Contribution")
-    with col3[1]:
-        st.subheader("For contribution")
-        st.write("Whatsapp : +226 56 90 66 66")
-        st.write("Email : ktapsoba80@gmail.com")
-        st.write("Github : https://github.com/mrtapsoba/AutoML")
-        st.write("Open Source AI")
-        st.subheader("Halal Artificial Intelligence")
-
-
-def data_for_study() :
-    st.title("Data for study")
-    col = st.columns(2)
-    with col[0] :
-        data_file = st.file_uploader("Chosse you data file (CSV only)")
-    with col[1]:
-        sep = st.selectbox("Choose Separator", ["Commas(,)", "Tabulation",  "Point-commas(;)"])
-    if(data_file and sep):
-        dataset = ftn.get_data(data_file, sep=sep)
-        st.session_state['dataset'] = dataset
-        with col[1]:
-            st.write(f"Your Dataset has")
-            nbraw, nbcol = dataset.shape
-            st.markdown(f"### Rows: {nbraw} and Columns: {nbcol}")
-            selected_columns = st.multiselect("Choose the columns for study", dataset.columns)
-        
-        st.markdown("#### Preview of imported data")
-        st.write("You can modify / update data directly here in live")
-            
-        if(len(selected_columns) != 0):
-            dataset_edited = st.data_editor(dataset[selected_columns])
-        else:
-            dataset_edited = st.data_editor(dataset)
-        st.session_state['dataset_edited'] = dataset_edited
-        return dataset_edited
-    else:
-        if 'dataset_edited' in st.session_state:
-            with col[1]:
-                dataset = st.session_state['dataset']
-                st.write(f"Your Dataset has")
-                st.markdown(f"### Rows: {len(dataset)} and Columns: {len(dataset.columns)}")
-                selected_columns = st.multiselect("Choose the columns for study (all by default)", dataset.columns)
-            if(len(selected_columns) != 0):
-                dataset_edited = st.data_editor(dataset[selected_columns])
-            else:
-                dataset_edited = st.data_editor(dataset)
-            st.session_state['dataset_edited'] = dataset_edited
-            # del st.session_state['dataset_edited']
-        else:
-            st.markdown("## Please import your data")
-        return
-
-def pre_processing(data):
-    st.title("PreProcessing")
-    tasks_list = ['Data cleaning', 'Data Transformation', 'Data Reduction', 'Code Myself']
-    col = st.columns((3,1))
-    with col[0]:
-        st.subheader("PreProcessing Tasks")
-        task = st.selectbox("Choose a preprocessing task", tasks_list)
-        st.write("Small message which explain the task")
-        st.divider()
-        if task == "Data cleaning":
-            col2 = st.columns(2)
-            with col2[0]:
-                clean_data = st.selectbox("Choose type data", ["Missing data", "Aberrante"])
-            with col2[1]:
-                clean_type = st.selectbox("Choose clean data", ["Delete it", "Replace by mean", "Replace by Quartile"])
-            if(st.button("Apply")):
-                st.write("Save data")
-        elif task == "Code Myself":
-            mycode = st.text_area("Write your code in Python")
-            if(mycode != None):
-                st.write("See your code")
-                st.code(mycode)
-                if(st.button("Apply")):
-                    exec(mycode)
-                    st.write("Your code is apply with succes")
-
-    with col[1]:
-        st.subheader("History")
-        liste_taches = ["Supprimer les valeurs manquantes", "Normaliser les données", "Supprimer les valeurs manquantes", "Encoder les variables catégorielles"]
-        df_taches = pd.DataFrame({"Tasks": liste_taches})
-        st.write(df_taches)
     
-
+# Page for present projet
 if(selected_page == "About Project"):
-    home_page()
+    hmpg.home_page()
 else:
+    # Page for get data
     if(selected_page == "Data for study"):
-        data = data_for_study()
+        data = dtpg.data_for_study()
     else:
+        # Missing data
         if('dataset_edited' not in st.session_state):
-            col = st.columns((2,1))
-            with col[0]:
-                st.image("https://i.pinimg.com/564x/c9/22/68/c92268d92cf2dbf96e3195683d9e14fb.jpg", caption="No data found for preprocessing")
-            with col[1]:
-                st.title("No Data Found")
-                st.write("Hello")
-                st.write("We noticed that no data has been found to perform the preparation. We encourage you to go to the \"Data for study\" tab to add the necessary data.")
-                st.write("Thank you very much!")
-
+            hmpg.no_data()
         else:
+            # Page for exploring data
             if(selected_page == 'Data Exploring'):
                 #
                 st.markdown("# Data Exploring")
+            # Page for prepreocessing data
             elif(selected_page == "PreProcessing"):
                 #
-                pre_processing(st.session_state['dataset_edited'])
+                prpg.pre_processing(st.session_state['dataset_edited'])
+            # Page for training data
             elif(selected_page == 'Machine Learning'):
                 #
                 st.markdown("# Machine Learning")
-
-
-
