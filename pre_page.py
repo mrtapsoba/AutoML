@@ -7,7 +7,6 @@ def pre_processing(data):
     tasks_list = ['Data cleaning', 'Data Transformation', 'Data Reduction', 'Code Myself']
     col = st.columns((2.5,1))
     with col[0]:
-        st.subheader("PreProcessing Tasks")
         task = st.selectbox("Choose a preprocessing task", tasks_list)
         st.write("Small message which explain the task")
         st.divider()
@@ -19,14 +18,28 @@ def pre_processing(data):
                 clean_type = st.selectbox("Choose clean data", ["Delete it", "Replace it"])
             if(clean_type == "Replace it"):
                 with col2[0]:
-                    new_data = st.selectbox("Replace by", ["Mean", "Median", "Quartile", "Other"])
-                    if(new_data == "Other"):
+                    new_data = st.selectbox("Replace by", ["Mean", "Median", "Quartile", "Other value"])
+                    if(new_data == "Other value"):
                         with col2[1]:
                             other = st.text_input("New value")
-                variables = st.multiselect("Choose the variables to update", data.columns)
+            variables = st.multiselect("Choose the variables to update", data.columns)
 
             if(st.button("Apply")):
                 st.error("Save data")
+        elif task == "Data Transformation":
+            col2 = st.columns(2)
+            with col2[0]:
+                transformation = st.selectbox("choose the transformation", ["Normalization", "Encodage"])
+                if transformation == "Normalization":
+                    with col2[1]:
+                        normalization = st.selectbox("choose the normalization", ["Standard", "MinMax"])
+                elif transformation == "Encodage":
+                    with col2[1]:
+                        normalization = st.selectbox("choose the encodage", ["LabelEncoder", ""])
+            variables = st.multiselect("Choose the variables to transform", data.columns)
+            if(st.button("Apply")):
+                st.success("Transform with succes")
+
         elif task == "Code Myself":
             mycode = st.text_area("Write your code in Python")
             if(mycode != None):
