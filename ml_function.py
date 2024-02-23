@@ -1,5 +1,7 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 
 def get_data(filename, sep, dtype=None):
     if(filename):
@@ -94,9 +96,6 @@ def normalize_data(df, target_variables, method='standard'):
     return df_copy
 
 
-import pandas as pd
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
-
 def encode_data(df, target_variables, method='label'):
     """
     Effectue l'encodage des données d'un DataFrame en choisissant le type d'encodage désiré
@@ -158,3 +157,23 @@ def encode_data_2(df, target_variables, method='label'):
         raise ValueError("Le type d'encodage doit être 'label' ou 'one_hot'.")
     
     return df_copy
+
+
+
+
+def reduce_data_pca(df, n_components=2):
+    """
+    Réduit les dimensions d'un jeu de données en utilisant l'analyse en composantes principales (PCA).
+    
+    Args:
+        df (DataFrame): Le DataFrame contenant les données.
+        n_components (int, optional): Le nombre de composantes principales à conserver.
+            Par défaut, 2.
+    
+    Returns:
+        DataFrame: Le DataFrame avec les dimensions réduites.
+    """
+    pca = PCA(n_components=n_components)
+    reduced_data = pca.fit_transform(df)
+    column_names = [f"PC{i+1}" for i in range(n_components)]
+    return pd.DataFrame(data=reduced_data, columns=column_names)
