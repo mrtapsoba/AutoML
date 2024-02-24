@@ -22,7 +22,7 @@ def pre_processing(data):
                     if(new_data == "Other value"):
                         with col2[1]:
                             other = st.text_input("New value")
-            variables = st.multiselect("Choose the variables to update", data.columns)
+            variables = st.multiselect("Choose the variables to update", data.keys())
 
             if(st.button("Apply")):
                 st.error("Save data")
@@ -36,7 +36,7 @@ def pre_processing(data):
                 elif transformation == "Encodage":
                     with col2[1]:
                         normalization = st.selectbox("choose the encodage", ["LabelEncoder", ""])
-            variables = st.multiselect("Choose the variables to transform", data.columns)
+            variables = st.multiselect("Choose the variables to transform", data.keys())
             if(st.button("Apply")):
                 st.success("Transform with succes")
 

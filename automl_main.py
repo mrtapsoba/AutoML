@@ -6,10 +6,12 @@ import geopandas as gpd
 import home_page as hmpg
 import data_page as dtpg
 import pre_page as prpg
+import data_explore_page as xplr
+import pandas as pd
 
 #######################
 st.set_page_config(
-    page_title = "Free ML by HAI",
+    page_title = "FreeML by HAI",
     layout = "wide",
     initial_sidebar_state = "expanded",
     page_icon="🧊"
@@ -36,6 +38,7 @@ else:
             if(selected_page == 'Data Exploring'):
                 #
                 st.markdown("# Data Exploring")
+                xplr.data_explore(st.session_state['dataset_edited'])
             # Page for prepreocessing data
             elif(selected_page == "PreProcessing"):
                 #

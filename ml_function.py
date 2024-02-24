@@ -3,16 +3,20 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 
-def get_data(filename, sep, dtype=None):
+def get_data(filename,extention, sep, sheet_name, dtype=None):
     if(filename):
-        if sep=="Tabulation":
-            sep_temp = "\t"
-        elif sep == "Commas(,)":
-            sep_temp = ","
-        elif sep == "Point-commas(;)":
-            sep_temp = ";"
-        return pd.read_csv(filename,sep= sep_temp)
-    
+        if extention == "CSV" or extention == "Text":
+            if sep=="Tabulation":
+                sep_temp = "\t"
+            elif sep == "Commas(,)":
+                sep_temp = ","
+            elif sep == "Point-commas(;)":
+                sep_temp = ";"
+            return pd.read_csv(filename,sep= sep_temp)
+        elif extention == "Excel":
+            return pd.read_excel(filename, sheet_name=sheet_name)
+
+
 # PreProcessing function
 def clean_missing(dataset, variables):
     # Variables is array
