@@ -49,13 +49,13 @@ def replace_missing_values(df, target_variables, method='mean', custom_value=Non
     df_copy = df.copy()
     
     for variable in target_variables:
-        if method == 'mean':
+        if method == 'Mean':
             replacement_value = df_copy[variable].mean()
-        elif method == 'median':
+        elif method == 'Median':
             replacement_value = df_copy[variable].median()
-        elif method == 'quartile':
+        elif method == 'Quartile':
             replacement_value = df_copy[variable].quantile(0.5)  # Quartile 50%, équivaut à la médiane
-        elif method == 'custom':
+        elif method == 'Custom':
             if custom_value is None:
                 raise ValueError("La méthode 'custom' nécessite une valeur personnalisée non nulle.")
             replacement_value = custom_value
@@ -85,11 +85,11 @@ def normalize_data(df, target_variables, method='standard'):
     df_copy = df.copy()
     
     scaler = None
-    if method == 'standard':
+    if method == 'Standard':
         scaler = StandardScaler()
-    elif method == 'min_max':
+    elif method == 'MinMax':
         scaler = MinMaxScaler()
-    elif method == 'robust':
+    elif method == 'Robust':
         scaler = RobustScaler()
     else:
         raise ValueError("Le type de normalisation doit être 'standard', 'min_max' ou 'robust'.")
@@ -116,11 +116,11 @@ def encode_data(df, target_variables, method='label'):
     """
     df_copy = df.copy()
     
-    if method == 'label':
+    if method == 'Label':
         label_encoder = LabelEncoder()
         for variable in target_variables:
             df_copy[variable] = label_encoder.fit_transform(df_copy[variable])
-    elif method == 'one_hot':
+    elif method == 'OneHot':
         df_copy = pd.get_dummies(df_copy, columns=target_variables)
     else:
         raise ValueError("Le type d'encodage doit être 'label' ou 'one_hot'.")

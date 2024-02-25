@@ -3,6 +3,10 @@ import streamlit as st
 import pandas as pd
 
 def pre_processing(data):
+    if 'pre_history' in st.session_state:
+        hisories = st.session_state['pre_history']
+    else :
+        hisories = []
     st.title("PreProcessing")
     tasks_list = ['Data cleaning', 'Data Transformation', 'Data Reduction', 'Code Myself']
     col = st.columns((2.5,1))
@@ -18,26 +22,42 @@ def pre_processing(data):
                 clean_type = st.selectbox("Choose clean data", ["Delete it", "Replace it"])
             if(clean_type == "Replace it"):
                 with col2[0]:
-                    new_data = st.selectbox("Replace by", ["Mean", "Median", "Quartile", "Other value"])
+                    new_data = st.selectbox("Replace by", ["Mean", "Median", "Quartile", "Custom"])
+                    custom = None
                     if(new_data == "Other value"):
                         with col2[1]:
-                            other = st.text_input("New value")
+                            custom = st.text_input("New value")
             variables = st.multiselect("Choose the variables to update", data.keys())
 
             if(st.button("Apply")):
-                st.error("Save data")
+                if clean_data == "Missing data" and clean_type == "Delete it":
+                    data = ftn.clean_missing(data, variables= variables)
+                    hisories.append(f"{clean_data} {clean_type} -- {variables}")
+                elif clean_data == "Missing data" and clean_type == "Replace it":
+                    data = ftn.replace_missing_values(data, variables, method=new_data, custom_value=custom)
+                    hisories.append(f"{clean_data} {clean_type} -- {variables} - {new_data} {custom}")
+                st.session_state['pre_history'] = hisories
+                st.success("Cleaning with succes")
+
         elif task == "Data Transformation":
             col2 = st.columns(2)
             with col2[0]:
                 transformation = st.selectbox("choose the transformation", ["Normalization", "Encodage"])
                 if transformation == "Normalization":
                     with col2[1]:
-                        normalization = st.selectbox("choose the normalization", ["Standard", "MinMax"])
+                        normalization = st.selectbox("choose the normalization", ["Standard", "MinMax", "Robust"])
                 elif transformation == "Encodage":
                     with col2[1]:
-                        normalization = st.selectbox("choose the encodage", ["LabelEncoder", ""])
+                        encodage = st.selectbox("choose the encodage", ["Label", "OneHot"])
             variables = st.multiselect("Choose the variables to transform", data.keys())
             if(st.button("Apply")):
+                if transformation == "Normalization":
+                    data = ftn.normalize_data(data, variables, method=normalization)
+                    hisories.append(f"{transformation} {normalization} -- {variables}")
+                elif transformation == "Encodage":
+                    data = ftn.encode_data(data, variables, method=encodage)
+                    hisories.append(f"{transformation} {encodage} -- {variables}")
+                st.session_state['pre_history'] = hisories
                 st.success("Transform with succes")
 
         elif task == "Code Myself":
@@ -47,10 +67,11 @@ def pre_processing(data):
                 st.code(mycode)
                 if(st.button("Apply")):
                     exec(mycode)
+                    hisories.append(f"Code by user -- {mycode}")
+                    st.session_state['pre_history'] = hisories
                     st.success("Your code is apply with succes")
 
     with col[1]:
         st.subheader("History")
-        liste_taches = ["Supprimer les valeurs manquantes", "Normaliser les données", "Supprimer les valeurs manquantes", "Encoder les variables catégorielles","Supprimer les valeurs manquantes", "Normaliser les données", "Supprimer les valeurs manquantes", "Encoder les variables catégorielles", "Supprimer les valeurs manquantes", "Normaliser les données", "Supprimer les valeurs manquantes", "Encoder les variables catégorielles","Supprimer les valeurs manquantes", "Normaliser les données", "Supprimer les valeurs manquantes", "Encoder les variables catégorielles"]
-        df_taches = pd.DataFrame({"Tasks": liste_taches})
+        df_taches = pd.DataFrame({"Tasks": hisories})
         st.write(df_taches)
