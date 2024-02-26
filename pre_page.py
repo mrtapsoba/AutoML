@@ -36,6 +36,13 @@ def pre_processing(data):
                 elif clean_data == "Missing data" and clean_type == "Replace it":
                     data = ftn.replace_missing_values(data, variables, method=new_data, custom_value=custom)
                     hisories.append(f"{clean_data} {clean_type} -- {variables} - {new_data} {custom}")
+                elif clean_data == "Aberrante" and clean_type == "Delete it":
+                    data = ftn.remove_outliers(data, variables)
+                    hisories.append(f"{clean_data} {clean_type} -- {variables}")
+                elif clean_data == "Aberrante" and clean_type == "Replace it":
+                    data = ftn.replace_outliers(data, variables, method=new_data, custom_value=custom)
+                    hisories.append(f"{clean_data} {clean_type} -- {variables} - {new_data} {custom}")
+
                 st.session_state['dataset_edited'] = data
                 st.session_state['pre_history'] = hisories
                 st.success("Cleaning with succes")

@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
@@ -66,6 +67,90 @@ def replace_missing_values(df, target_variables, method='mean', custom_value=Non
     
     return df_copy
 
+
+def replace_outliers(data, target_columns=None, method='mean', custom_value=None):
+    """
+    Replace outliers in specified target columns of a dataset with specified method or custom value.
+
+    Parameters:
+        data (DataFrame): Input DataFrame.
+        target_columns (list): List of column names to replace outliers in. If None, all numeric columns will be considered.
+        method (str): Method for replacing outliers. Options: 'mean', 'median', 'quartile', 'custom'.
+        custom_value (float): Custom value to replace outliers if method is 'custom'.
+
+    Returns:
+        DataFrame: Data with outliers replaced in specified target columns.
+    """
+    if target_columns is None:
+        target_columns = data.select_dtypes(include=np.number).columns.tolist()
+
+    replaced_data = data.copy()
+
+    for column in target_columns:
+        column_data = data[column]
+
+        if method == 'mean':
+            replace_value = np.mean(column_data)
+        elif method == 'median':
+            replace_value = np.median(column_data)
+        elif method == 'quartile':
+            q1 = np.percentile(column_data, 25)
+            q3 = np.percentile(column_data, 75)
+            replace_value = np.mean([q1, q3])
+        elif method == 'custom':
+            if custom_value is None:
+                raise ValueError("Custom value must be specified when method is 'custom'.")
+            replace_value = custom_value
+        else:
+            raise ValueError("Invalid method. Choose from 'mean', 'median', 'quartile', or 'custom'.")
+
+        # Calculate the interquartile range
+        q1 = np.percentile(column_data, 25)
+        q3 = np.percentile(column_data, 75)
+        iqr = q3 - q1
+
+        # Define the lower and upper bounds
+        lower_bound = q1 - 1.5 * iqr
+        upper_bound = q3 + 1.5 * iqr
+
+        # Replace outliers
+        replaced_data[column] = np.where((column_data < lower_bound) | (column_data > upper_bound), replace_value, column_data)
+
+    return replaced_data
+
+
+def remove_outliers(data, target_columns=None):
+    """
+    Remove outliers from specified target columns of a dataset.
+
+    Parameters:
+        data (DataFrame): Input DataFrame.
+        target_columns (list): List of column names to remove outliers from. If None, all numeric columns will be considered.
+
+    Returns:
+        DataFrame: Data with outliers removed from specified target columns.
+    """
+    if target_columns is None:
+        target_columns = data.select_dtypes(include=np.number).columns.tolist()
+
+    cleaned_data = data.copy()
+
+    for column in target_columns:
+        column_data = data[column]
+
+        # Calculate the interquartile range
+        q1 = np.percentile(column_data, 25)
+        q3 = np.percentile(column_data, 75)
+        iqr = q3 - q1
+
+        # Define the lower and upper bounds
+        lower_bound = q1 - 1.5 * iqr
+        upper_bound = q3 + 1.5 * iqr
+
+        # Remove outliers
+        cleaned_data = cleaned_data[(column_data >= lower_bound) & (column_data <= upper_bound)]
+
+    return cleaned_data
 
 
 def normalize_data(df, target_variables, method='standard'):
