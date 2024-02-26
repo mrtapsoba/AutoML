@@ -75,6 +75,14 @@ def pre_processing(data):
                 st.session_state['pre_history'] = hisories
                 st.success("Transform with succes")
 
+        elif task == "Data Reduction":
+            variables = st.multiselect("Choose the variables to stay", data.keys())
+            if st.button("Apply"):
+                data = data[variables]
+                hisories.append(f"{task}, stay columns -- {variables}")
+                st.session_state['dataset_edited'] = data
+                st.session_state['pre_history'] = hisories
+                st.success("Your code is apply with succes")
         elif task == "Code Myself":
             mycode = st.text_area("Write your code in Python")
             if(mycode != None):
