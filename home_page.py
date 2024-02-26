@@ -36,7 +36,13 @@ def home_page():
         st.write("Email : ktapsoba80@gmail.com")
         st.write("Github : https://github.com/mrtapsoba/AutoML")
         st.divider()
-        st.write("Mr TAPSOBA, Software ingenier and Data scientist")
+        m = st.columns((3,1))
+        with m[1]:
+            st.image("https://avatars.githubusercontent.com/u/128386583?v=4", caption="TAPS")
+        with m[0]:
+            st.write("Mr TAPSOBA Abdoul Kader")
+            st.write("Software ingenier and Data scientist")
+            st.write("Github : https://github.com/mrtapsoba")
         st.subheader("Halal Artificial Intelligence")
 
 
