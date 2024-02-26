@@ -35,6 +35,8 @@ def home_page():
         st.write("Whatsapp : +226 56 90 66 66")
         st.write("Email : ktapsoba80@gmail.com")
         st.write("Github : https://github.com/mrtapsoba/AutoML")
+        st.divider()
+        st.write("Mr TAPSOBA, Software ingenier and Data scientist")
         st.subheader("Halal Artificial Intelligence")
 
 

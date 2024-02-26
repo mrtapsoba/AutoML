@@ -36,27 +36,35 @@ def pre_processing(data):
                 elif clean_data == "Missing data" and clean_type == "Replace it":
                     data = ftn.replace_missing_values(data, variables, method=new_data, custom_value=custom)
                     hisories.append(f"{clean_data} {clean_type} -- {variables} - {new_data} {custom}")
+                st.session_state['dataset_edited'] = data
                 st.session_state['pre_history'] = hisories
                 st.success("Cleaning with succes")
 
         elif task == "Data Transformation":
             col2 = st.columns(2)
             with col2[0]:
-                transformation = st.selectbox("choose the transformation", ["Normalization", "Encodage"])
-                if transformation == "Normalization":
+                transformation = st.selectbox("choose the transformation", ["Reset index", "Normalization", "Encodage"])
+                if transformation == "Reset index":
+                    st.write("Just apply please")
+                elif transformation == "Normalization":
                     with col2[1]:
                         normalization = st.selectbox("choose the normalization", ["Standard", "MinMax", "Robust"])
                 elif transformation == "Encodage":
                     with col2[1]:
                         encodage = st.selectbox("choose the encodage", ["Label", "OneHot"])
-            variables = st.multiselect("Choose the variables to transform", data.keys())
+            if transformation != "Reset index":
+                variables = st.multiselect("Choose the variables to transform", data.keys())
             if(st.button("Apply")):
-                if transformation == "Normalization":
+                if transformation == "Reset index":
+                    data = ftn.reset_index(data)
+                    hisories.append(f"{transformation} ")
+                elif transformation == "Normalization":
                     data = ftn.normalize_data(data, variables, method=normalization)
                     hisories.append(f"{transformation} {normalization} -- {variables}")
                 elif transformation == "Encodage":
                     data = ftn.encode_data(data, variables, method=encodage)
                     hisories.append(f"{transformation} {encodage} -- {variables}")
+                st.session_state['dataset_edited'] = data
                 st.session_state['pre_history'] = hisories
                 st.success("Transform with succes")
 
@@ -68,6 +76,7 @@ def pre_processing(data):
                 if(st.button("Apply")):
                     exec(mycode)
                     hisories.append(f"Code by user -- {mycode}")
+                    st.session_state['dataset_edited'] = data
                     st.session_state['pre_history'] = hisories
                     st.success("Your code is apply with succes")
 
