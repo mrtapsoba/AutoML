@@ -30,6 +30,8 @@ def replace_missing(dataset, variables, values):
 def reset_index(dataset):
     return dataset.reset_index()
 
+def new_index(dataset, variables):
+    return dataset.set_index(variables)
 
 def replace_missing_values(df, target_variables, method='mean', custom_value=None):
     """

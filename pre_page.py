@@ -50,21 +50,30 @@ def pre_processing(data):
         elif task == "Data Transformation":
             col2 = st.columns(2)
             with col2[0]:
-                transformation = st.selectbox("choose the transformation", ["Reset index", "Normalization", "Encodage"])
-                if transformation == "Reset index":
-                    st.write("Just apply please")
+                transformation = st.selectbox("choose the transformation", ["Update index", "Normalization", "Encodage"])
+                if transformation == "Update index":
+                    with col2[1]:
+                        update = st.selectbox("Choose th e update process", ["Reset", "Add new"])
+                    #if update == "Reset":
+                    #    st.write("Just apply please")
+                    #else :
+                    #    variables = st.multiselect("Choose the variables to become index", data.keys())
                 elif transformation == "Normalization":
                     with col2[1]:
                         normalization = st.selectbox("choose the normalization", ["Standard", "MinMax", "Robust"])
                 elif transformation == "Encodage":
                     with col2[1]:
                         encodage = st.selectbox("choose the encodage", ["Label", "OneHot"])
-            if transformation != "Reset index":
+            if transformation != "Update index" or update == "Add new":
                 variables = st.multiselect("Choose the variables to transform", data.keys())
             if(st.button("Apply")):
-                if transformation == "Reset index":
-                    data = ftn.reset_index(data)
-                    hisories.append(f"{transformation} ")
+                if transformation == "Update index":
+                    if update == "Reset":
+                        data = ftn.reset_index(data)
+                        hisories.append(f"{transformation} {update}")
+                    else:
+                        data = ftn.new_index(data, variables)
+                        hisories.append(f"{transformation} {update} -- {variables}")
                 elif transformation == "Normalization":
                     data = ftn.normalize_data(data, variables, method=normalization)
                     hisories.append(f"{transformation} {normalization} -- {variables}")
