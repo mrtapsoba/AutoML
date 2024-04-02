@@ -20,6 +20,8 @@ def data_for_study() :
             sep = st.selectbox("Choose Separator", ["Commas(,)", "Tabulation",  "Point-commas(;)"])
     if(data_file):
         dataset = ftn.get_data(data_file,extention = extention, sep=sep, sheet_name = sheet_name)
+        #columns_to_drop = [col for col in dataset.columns if 'Unnamed' in col]
+        #dataset = dataset.drop(columns=columns_to_drop)
         st.session_state['dataset'] = dataset
         with col[1]:
             st.write(f"Your Dataset has")
